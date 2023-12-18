@@ -1,45 +1,28 @@
 #include<iostream>
 
+const int num_of_polygon = 5;
+
 using namespace std;
 
-/*
-В данном случае представлено разбиение двухмерного пространства
-Соответственно полигоны выглядят, как плоскости.
-Также, в данной реализации построения BSP дерева, при разбиении, нормаль изображается относительно точки,
-представляющей из себя наблюдателя
-*/
 
 typedef class BSP_Node
 {
 	public:
-
-	BSP_Node* back;
-	BSP_Node* front;
+	int index;
+	BSP_Node* back = NULL;
+	BSP_Node* front = NULL;
 
 }BSP_Node;
 
-//точка
 typedef class point
 {
-	//координаты точки 
 	public:
 	int x;
 	int y;
 }point;
 
-typedef class vector
-{
-	public:
-	point one;
-	point two;
-}vector;
-
 typedef class polygon
 {
-	/*
-	в моём случае будет реализовано 2д пространство,
-	поэтому полигоны будут отображаться, как прямые
-	*/
 	public:
 	point one;
 	point two;
@@ -53,42 +36,59 @@ typedef class plane
 
 }plane;
 
-class BSP_Tree
+
+typedef class BSP_Tree
 {
 	private:
 
-	point human;
-	plane BSP_Plane;
+	plane *BSP_Plane;
+	BSP_Node *root;
+
+	
 
 	public:
 
-	BSP_Tree(plane BSP_Plane, point human)
+	void add_node(plane *BSP_Plane, BSP_Node *root)
 	{
-		//выбираю объект, по которому буду строить плоскость
+
+	}
+
+	BSP_Tree(plane *BSP_Plane)
+	{
+		BSP_Node *root;root = new BSP_Node;this->root = root;
+		this->BSP_Plane = BSP_Plane;
+		for(int i = 0; i<num_of_polygon; i++)
+		{
+			polygon *polygon_now = &BSP_Plane->list_of_polygons[i];
+			if(i == 0)
+			{
+				root->index = i;
+			}
+			make_tree(BSP_Plane, root);
+		}
+		
 	}
 	~BSP_Tree()
 	{
 
 	}
-
 	
-};
+}BSP_Tree;
 
 int main()
 {
 	//массив полигонов 
-	plane *plane1 = new plane; plane1->list_of_polygons = new polygon[5]
+	plane *plane1 = new plane; plane1->list_of_polygons = new polygon[num_of_polygon]
 	{
-		
 		{{3, 12}, {10, 16}},
 		{{10, 14}, {14, 9}},
 		{{9, 3}, {15, 7}},
 		{{15, 12}, {17, 17}},
 		{{5, 3}, {5, 9}}
 	};
-	point *human = new point; human->x=12; human->y=17;
+
+	BSP_Tree tree1(plane1);
 
 	delete [] plane1;
-	delete [] human;
 	return 0;
 }
